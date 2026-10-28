@@ -10,7 +10,7 @@
         <div class="row justify-content-center">
             <div class="col-md-4">
                 <div class="card shadow">
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <h3 class="text-center mb-4">Iniciar Sesión</h3>
                         
                         <!-- Mensajes de error o éxito -->
@@ -20,7 +20,11 @@
                         <div th:if="${param.logout}" class="alert alert-success">
                             Has cerrado sesión correctamente.
                         </div>
+                        <div th:if="${param.exito}" class="alert alert-success">
+                            ¡Registro exitoso! Ya puedes iniciar sesión.
+                        </div>
 
+                        <!-- Formulario de Login -->
                         <form th:action="@{/login}" method="post">
                             <div class="mb-3">
                                 <label class="form-label">Usuario</label>
@@ -32,6 +36,12 @@
                             </div>
                             <button type="submit" class="btn btn-primary w-100">Entrar</button>
                         </form>
+
+                        <!-- Enlace para ir al Registro -->
+                        <div class="text-center mt-3">
+                            <p class="mb-0">¿No tienes cuenta? <a th:href="@{/registro}">Regístrate aquí</a></p>
+                        </div>
+                        
                     </div>
                 </div>
             </div>

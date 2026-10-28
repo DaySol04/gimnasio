@@ -31,7 +31,7 @@ public class Usuario {
     @NotBlank(message = "La contraseña es requerida")
     private String password;
 
-    @NotBlank(message = "El rol es requerido")
+    //@NotBlank(message = "El rol es requerido")
     private String rol; // "ADMIN" (Entrenador) o "CLIENTE"
 
     private boolean activo = true; // Para el borrado lógico
