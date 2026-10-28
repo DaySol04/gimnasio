@@ -1,6 +1,6 @@
 //Crear el entrenador y cliente automaticamente
 
-package com.gimnasio.gimnasio.config;
+package com.gimnasio.config;
 
 import com.gimnasio.model.Usuario;
 import com.gimnasio.repository.UsuarioRepository;

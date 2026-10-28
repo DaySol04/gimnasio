@@ -1,6 +1,6 @@
 //Se le dice a Spring que use la encriptacion, proteja las rutas y use el login personalizado
 
-package com.gimnasio.gimnasio.config;
+package com.gimnasio.config;
 
 import com.gimnasio.service.UsuarioDetailsService;
 import org.springframework.context.annotation.Bean;
