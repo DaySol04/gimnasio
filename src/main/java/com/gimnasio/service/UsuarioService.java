@@ -61,4 +61,20 @@ public class UsuarioService {
         usuario.setActivo(false);
         usuarioRepository.save(usuario);
     }
+
+    //Genera una contraseña temporal
+    public String recuperarPassword(String email) {
+    Usuario usuario = usuarioRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("No existe una cuenta con ese correo"));
+    
+    // Generamos una contraseña temporal aleatoria (ej: "temp1234")
+    String passTemporal = "temp" + (int)(Math.random() * 9000 + 1000);
+    
+    // La encriptamos y la guardamos
+    usuario.setPassword(passwordEncoder.encode(passTemporal));
+    usuarioRepository.save(usuario);
+    
+    return passTemporal; // Retornamos la contraseña en texto plano para mostrarla en pantalla
+}
+
 }

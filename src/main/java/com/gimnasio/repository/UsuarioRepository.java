@@ -19,4 +19,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     // Para validar que la cédula no se repita
     boolean existsByCedula(String cedula);
+
+    //Para buscar por correo
+    java.util.Optional<Usuario> findByEmail(String email);
 }

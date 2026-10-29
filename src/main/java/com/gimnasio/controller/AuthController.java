@@ -49,4 +49,22 @@ public class AuthController {
             return "registro";
         }
     }
+
+        @GetMapping("/recuperar")
+    public String mostrarRecuperar() {
+        return "recuperar";
+    }
+
+    @PostMapping("/recuperar")
+    public String procesarRecuperar(@RequestParam("email") String email, Model model) {
+        System.out.println("--> Recibí el correo: " + email); // <-- Mensaje de prueba
+        try {
+            String passTemp = usuarioService.recuperarPassword(email);
+            model.addAttribute("mensajeExito", "Contraseña restablecida. Tu nueva contraseña temporal es: " + passTemp);
+            System.out.println("--> Contraseña generada: " + passTemp);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorRecuperar", e.getMessage());
+        }
+        return "recuperar";
+    }
 }
