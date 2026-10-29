@@ -9,6 +9,10 @@
     <div class="container mt-5 text-center">
         <h1>¡Bienvenido al Sistema del Gimnasio!</h1>
         <p>Has iniciado sesión correctamente.</p>
+        
+        <!-- Botón para ir a la gestión de usuarios -->
+        <a th:href="@{/usuarios}" class="btn btn-primary mt-3">Gestionar Usuarios</a>
+        <br><br>
         <a th:href="@{/logout}" class="btn btn-danger">Cerrar Sesión</a>
     </div>
 </body>

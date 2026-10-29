@@ -17,12 +17,14 @@ public class DataInitializer {
         return args -> {
             if (repo.count() == 0) {
                 // Creamos al Entrenador (ADMIN)
-                service.crear(new Usuario("Carlos Entrenador", "admin", "admin@gimnasio.com", "11111111", "admin123", "ADMIN"));
+                service.crear(new Usuario("Adam Entrenador", "admin", "admin@gimnasio.com", "11111111", "admin123", "ADMIN"));
                 
                 // Creamos a la Cliente (CLIENTE)
                 service.crear(new Usuario("Maria Cliente", "maria", "maria@gimnasio.com", "22222222", "maria123", "CLIENTE"));
                 
-                System.out.println("✅ Usuarios de prueba creados exitosamente.");
+                service.crear(new Usuario("Kendall Cliente", "kendall", "kendall@gimnasio.com", "303330333", "kendall123", "CLIENTE"));
+                
+                System.out.println(" Usuarios de prueba creados exitosamente.");
             }
         };
     }
