@@ -77,4 +77,44 @@ public class UsuarioService {
     return passTemporal; // Retornamos la contraseña en texto plano para mostrarla en pantalla
 }
 
+
+    public void actualizar(Usuario usuarioEditado) {
+        // 1. Buscamos el usuario original en la base de datos
+        Usuario usuarioDB = buscarPorId(usuarioEditado.getId());
+
+        // 2. Validar correo único (que no sea el mismo de este usuario)
+        usuarioRepository.findByEmail(usuarioEditado.getEmail()).ifPresent(u -> {
+            if (!u.getId().equals(usuarioEditado.getId())) {
+                throw new IllegalArgumentException("El correo ya está registrado por otro usuario");
+            }
+        });
+
+        // 3. Validar cédula única
+        usuarioRepository.findByCedula(usuarioEditado.getCedula()).ifPresent(u -> {
+            if (!u.getId().equals(usuarioEditado.getId())) {
+                throw new IllegalArgumentException("La cédula ya está registrada por otro usuario");
+            }
+        });
+
+        // 4. Validar username único
+        usuarioRepository.findByUsername(usuarioEditado.getUsername()).ifPresent(u -> {
+            if (!u.getId().equals(usuarioEditado.getId())) {
+                throw new IllegalArgumentException("El nombre de usuario ya está en uso");
+            }
+        });
+
+        // 5. Manejo de la contraseña: si viene vacía, mantenemos la que ya tenía
+        if (usuarioEditado.getPassword() == null || usuarioEditado.getPassword().trim().isEmpty()) {
+            usuarioEditado.setPassword(usuarioDB.getPassword());
+        } else {
+            // Si escribió una nueva, la encriptamos
+            usuarioEditado.setPassword(passwordEncoder.encode(usuarioEditado.getPassword()));
+        }
+
+        // 6. Mantenemos el rol y el estado original (para no perderlos en la edición)
+        usuarioEditado.setRol(usuarioDB.getRol());
+        usuarioEditado.setActivo(usuarioDB.isActivo());
+
+        usuarioRepository.save(usuarioEditado);
+    }
 }

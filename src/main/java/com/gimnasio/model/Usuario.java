@@ -28,7 +28,7 @@ public class Usuario {
     @Column(unique = true)
     private String cedula;
 
-    @NotBlank(message = "La contraseña es requerida")
+    //@NotBlank(message = "La contraseña es requerida")
     private String password;
 
     //@NotBlank(message = "El rol es requerido")

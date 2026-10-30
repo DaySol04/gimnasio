@@ -22,4 +22,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     //Para buscar por correo
     java.util.Optional<Usuario> findByEmail(String email);
+
+    java.util.Optional<Usuario> findByCedula(String cedula);
 }
