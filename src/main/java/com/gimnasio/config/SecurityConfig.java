@@ -31,23 +31,23 @@ public class SecurityConfig {
     // 2. Conectar el servicio de usuarios con la encriptación
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        // Se pasa el UserDetailsService en el constructor
+        
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(usuarioDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
-    // 3. Configurar las reglas de navegación (quién puede entrar a dónde)
+    // 3. Configurar a quien puede entrar dependiendo la página
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login","/registro", "/recuperar", "/css/**", "/js/**").permitAll() // Rutas públicas
-                .anyRequest().authenticated() // Todo lo demás requiere login
+                .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/login", "/registro", "/recuperar", "/css/**", "/js/**").permitAll()
+                .requestMatchers("/usuarios/**").hasRole("ADMIN") 
             )
             .formLogin(form -> form
-                .loginPage("/login") // Nuestra página personalizada
-                .defaultSuccessUrl("/", true) // A dónde va si el login es exitoso
+                .loginPage("/login") 
+                .defaultSuccessUrl("/", true) 
                 .permitAll()
             )
             .logout(logout -> logout

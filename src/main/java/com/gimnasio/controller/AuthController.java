@@ -4,6 +4,8 @@ package com.gimnasio.controller;
 
 import com.gimnasio.model.Usuario;
 import com.gimnasio.service.UsuarioService;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,7 +21,7 @@ public class AuthController {
         this.usuarioService = usuarioService;
     }
 
-    // (Deja aquí el @GetMapping("/login") y @GetMapping("/") que ya tenías)
+    
 
     // 1. Mostrar el formulario de registro
     @GetMapping("/registro")
@@ -31,20 +33,18 @@ public class AuthController {
     // 2. Procesar el formulario
     @PostMapping("/registro")
     public String procesarRegistro(@Valid @ModelAttribute("usuario") Usuario usuario, BindingResult result, Model model) {
-        // Si hay errores de formato (ej. correo mal escrito, cédula vacía)
+        // Si hay errores de formato 
         if (result.hasErrors()) {
             return "registro"; // Vuelve al formulario con los errores
         }
 
         try {
-            // Forzamos que el rol siempre sea CLIENTE al registrarse por la web
-            usuario.setRol("CLIENTE");
-            usuarioService.crear(usuario); // Aquí salta el error de correo/cédula duplicado
             
-            // Si todo sale bien, lo mandamos al login con un mensaje
+            usuario.setRol("CLIENTE");
+            usuarioService.crear(usuario); 
             return "redirect:/login?exito";
         } catch (IllegalArgumentException e) {
-            // Capturamos el error de "El correo ya está registrado" o "Cédula ya registrada"
+            // Captura del "El correo ya está registrado" o "Cédula ya registrada"
             model.addAttribute("errorRegistro", e.getMessage());
             return "registro";
         }
@@ -57,7 +57,7 @@ public class AuthController {
 
     @PostMapping("/recuperar")
     public String procesarRecuperar(@RequestParam("email") String email, Model model) {
-        System.out.println("--> Recibí el correo: " + email); // <-- Mensaje de prueba
+        System.out.println("--> Recibí el correo: " + email); 
         try {
             String passTemp = usuarioService.recuperarPassword(email);
             model.addAttribute("mensajeExito", "Contraseña restablecida. Tu nueva contraseña temporal es: " + passTemp);
@@ -66,5 +66,27 @@ public class AuthController {
             model.addAttribute("errorRecuperar", e.getMessage());
         }
         return "recuperar";
+    }
+    
+        @GetMapping("/perfil")
+    public String verPerfil(Authentication authentication, Model model) {
+        String username = authentication.getName();
+        Usuario usuario = usuarioService.buscarPorUsername(username); 
+        model.addAttribute("usuario", usuario);
+        return "perfil";
+    }
+
+    @PostMapping("/perfil")
+    public String actualizarPerfil(@ModelAttribute("usuario") Usuario usuario, Authentication authentication, Model model) {
+        try {
+            
+            Usuario usuarioActual = usuarioService.buscarPorUsername(authentication.getName());
+            usuario.setId(usuarioActual.getId()); 
+            usuarioService.actualizar(usuario);
+            return "redirect:/?perfilActualizado";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorPerfil", e.getMessage());
+            return "perfil";
+        }
     }
 }

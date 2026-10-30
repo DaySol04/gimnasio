@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Perfil - Gimnasio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body p-4">
+                        <h3 class="text-center mb-4">Mi Perfil</h3>
+                        
+                        <div th:if="${errorPerfil}" class="alert alert-danger" th:text="${errorPerfil}"></div>
+
+                        <form th:action="@{/perfil}" th:object="${usuario}" method="post">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre Completo</label>
+                                <input type="text" class="form-control" th:field="*{nombre}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Cédula</label>
+                                <input type="text" class="form-control" th:field="*{cedula}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" th:field="*{email}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" th:field="*{password}" placeholder="Dejar en blanco para mantener la actual">
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a th:href="@{/}" class="btn btn-secondary">Volver al Inicio</a>
+                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

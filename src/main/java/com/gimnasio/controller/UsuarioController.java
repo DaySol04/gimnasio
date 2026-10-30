@@ -28,7 +28,7 @@ public class UsuarioController {
         List<Usuario> usuarios = usuarioService.listarTodos();
         model.addAttribute("usuarios", usuarios);
         model.addAttribute("usernameActual", authentication.getName()); // Para saber quién está logueado
-        return "usuarios/lista"; // Buscará en templates/usuarios/lista.html
+        return "usuarios/lista"; 
     }
 
         // Desactivar un usuario (Borrado lógico)
@@ -38,21 +38,21 @@ public class UsuarioController {
         return "redirect:/usuarios"; // Recarga la tabla para ver el cambio
     }
 
-        // Mostrar el formulario de edición
+        // Muestra el formulario de edición
     @GetMapping("/editar/{id}")
     public String mostrarEditar(@PathVariable("id") Long id, Model model) {
         Usuario usuario = usuarioService.buscarPorId(id);
         model.addAttribute("usuario", usuario);
-        return "usuarios/formulario"; // Buscará formulario.html
+        return "usuarios/formulario"; 
     }
 
-    // Procesar la edición
+    // Procesa la edición
     @PostMapping("/editar/{id}")
     public String procesarEditar(@PathVariable("id") Long id, @ModelAttribute("usuario") Usuario usuario, Model model) {
         try {
-            usuario.setId(id); // Aseguramos que el ID sea el correcto
+            usuario.setId(id); // Asegura que el ID sea el correcto
             usuarioService.actualizar(usuario);
-            return "redirect:/usuarios"; // Si sale bien, volvemos a la tabla
+            return "redirect:/usuarios"; 
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorEdicion", e.getMessage());
             return "usuarios/formulario"; // Si hay error, se queda en el formulario

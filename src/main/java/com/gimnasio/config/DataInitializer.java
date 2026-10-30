@@ -16,10 +16,10 @@ public class DataInitializer {
     CommandLineRunner initDatabase(UsuarioRepository repo, UsuarioService service) {
         return args -> {
             if (repo.count() == 0) {
-                // Creamos al Entrenador (ADMIN)
+                // Creación del Entrenador (ADMIN)
                 service.crear(new Usuario("Adam Entrenador", "admin", "admin@gimnasio.com", "11111111", "admin123", "ADMIN"));
                 
-                // Creamos a la Cliente (CLIENTE)
+                // Creación del Cliente (CLIENTE)
                 service.crear(new Usuario("Maria Cliente", "maria", "maria@gimnasio.com", "22222222", "maria123", "CLIENTE"));
                 
                 service.crear(new Usuario("Kendall Cliente", "kendall", "kendall@gimnasio.com", "303330333", "kendall123", "CLIENTE"));

@@ -15,13 +15,13 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // Inyectamos las dependencias por el constructor
+    // Dependencias por el constructor
     public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Listar todos los usuarios (para el panel de admin)
+    // Listar todos los usuarios (panel de admin)
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }
@@ -32,12 +32,12 @@ public class UsuarioService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
     }
 
-    // Buscar por Username (lo usaremos para el Login)
+    // Buscar por Username (para el Login)
     public Usuario buscarPorUsername(String username) {
         return usuarioRepository.findByUsername(username).orElse(null);
     }
 
-    // CREAR USUARIO (Aquí van las validaciones del Módulo 1 y 2)
+    // CREAR USUARIO (validaciones del Módulo 1 y 2)
     public void crear(Usuario usuario) {
         // Validar correo único
         if (usuarioRepository.existsByEmail(usuario.getEmail())) {
@@ -55,7 +55,7 @@ public class UsuarioService {
         usuarioRepository.save(usuario);
     }
 
-    // DESACTIVAR (Borrado lógico, para el Módulo 2)
+    // DESACTIVAR (Borrado lógico)
     public void desactivar(Long id) {
         Usuario usuario = buscarPorId(id);
         usuario.setActivo(false);
@@ -67,19 +67,19 @@ public class UsuarioService {
     Usuario usuario = usuarioRepository.findByEmail(email)
             .orElseThrow(() -> new IllegalArgumentException("No existe una cuenta con ese correo"));
     
-    // Generamos una contraseña temporal aleatoria (ej: "temp1234")
+    // Genera una contraseña temporal aleatoria (ej: "temp1234")
     String passTemporal = "temp" + (int)(Math.random() * 9000 + 1000);
     
-    // La encriptamos y la guardamos
+    // Se encripta y se guarda
     usuario.setPassword(passwordEncoder.encode(passTemporal));
     usuarioRepository.save(usuario);
     
-    return passTemporal; // Retornamos la contraseña en texto plano para mostrarla en pantalla
+    return passTemporal; // Se retorna la contraseña en texto plano para mostrarla en pantalla
 }
 
 
     public void actualizar(Usuario usuarioEditado) {
-        // 1. Buscamos el usuario original en la base de datos
+        // 1. Se busca el usuario original en la base de datos
         Usuario usuarioDB = buscarPorId(usuarioEditado.getId());
 
         // 2. Validar correo único (que no sea el mismo de este usuario)
@@ -103,15 +103,15 @@ public class UsuarioService {
             }
         });
 
-        // 5. Manejo de la contraseña: si viene vacía, mantenemos la que ya tenía
+        // 5. Manejo de la contraseña: si viene vacía, se mantiene la que ya tenía
         if (usuarioEditado.getPassword() == null || usuarioEditado.getPassword().trim().isEmpty()) {
             usuarioEditado.setPassword(usuarioDB.getPassword());
         } else {
-            // Si escribió una nueva, la encriptamos
+            // Si escribió una nueva, se encripta
             usuarioEditado.setPassword(passwordEncoder.encode(usuarioEditado.getPassword()));
         }
 
-        // 6. Mantenemos el rol y el estado original (para no perderlos en la edición)
+        // 6. Se mantiene el rol y el estado original 
         usuarioEditado.setRol(usuarioDB.getRol());
         usuarioEditado.setActivo(usuarioDB.isActivo());
 

@@ -13,9 +13,10 @@ public class MainController{
         return "login"; // Busca el archivo login.html en templates
     }
 
-    // Esta ruta es a donde te manda cuando logras entrar
+    
     @GetMapping("/")
     public String inicio() {
-        return "index"; // Necesitaremos crear este index.html pronto
+        return "index"; 
     }
+    
 }
