@@ -22,36 +22,44 @@ public class SecurityConfig {
         this.usuarioDetailsService = usuarioDetailsService;
     }
 
-    // 1. Configurar la encriptación de contraseñas
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 2. Conectar el servicio de usuarios con la encriptación
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(usuarioDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
-    // 3. Configurar a quien puede entrar dependiendo la página
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth
+            .authenticationProvider(authenticationProvider())
+            .authorizeHttpRequests(auth -> auth
+                // Rutas públicas
                 .requestMatchers("/login", "/registro", "/recuperar", "/css/**", "/js/**").permitAll()
-                .requestMatchers("/usuarios/**").hasRole("ADMIN") 
+                
+                // Rutas de gestión de usuarios (Solo ADMIN)
+                .requestMatchers("/usuarios/**").hasRole("ADMIN")
+                
+                // Rutas de creación de clases (Solo ADMIN)
+                .requestMatchers("/clases/nuevo", "/clases/guardar").hasRole("ADMIN")
+                
+                // Cualquier otro usuario autenticado puede ver la lista de clases y su perfil
+                .requestMatchers("/clases/**", "/perfil").authenticated()
+                
+                // Todo lo demás requiere estar logueado
+                .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login") 
-                .defaultSuccessUrl("/", true) 
+                .loginPage("/login")
+                .defaultSuccessUrl("/", true)
                 .permitAll()
             )
             .logout(logout -> logout
-                .logoutUrl("/logout")
                 .logoutSuccessUrl("/login?logout")
                 .permitAll()
             );
