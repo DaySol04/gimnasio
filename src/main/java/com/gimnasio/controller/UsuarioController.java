@@ -25,8 +25,10 @@ public class UsuarioController {
     // Mostrar la lista de todos los usuarios (Solo para ADMIN)
     @GetMapping
     public String listarUsuarios(Model model, Authentication authentication) {
+        //Filtra por nombre/username
         List<Usuario> usuarios = usuarioService.listarTodos();
         model.addAttribute("usuarios", usuarios);
+        //Authentication permite saber quein esta logueado
         model.addAttribute("usernameActual", authentication.getName()); // Para saber quién está logueado
         return "usuarios/lista"; 
     }
@@ -34,6 +36,7 @@ public class UsuarioController {
         // Desactivar un usuario (Borrado lógico)
     @PostMapping("/desactivar/{id}")
     public String desactivarUsuario(@PathVariable("id") Long id) {
+        //Cambia el estado de "activo" a "false"
         usuarioService.desactivar(id);
         return "redirect:/usuarios"; // Recarga la tabla para ver el cambio
     }
@@ -41,6 +44,7 @@ public class UsuarioController {
         // Muestra el formulario de edición
     @GetMapping("/editar/{id}")
     public String mostrarEditar(@PathVariable("id") Long id, Model model) {
+        //Se busca al usuario por su ID en la BD
         Usuario usuario = usuarioService.buscarPorId(id);
         model.addAttribute("usuario", usuario);
         return "usuarios/formulario"; 
@@ -51,6 +55,7 @@ public class UsuarioController {
     public String procesarEditar(@PathVariable("id") Long id, @ModelAttribute("usuario") Usuario usuario, Model model) {
         try {
             usuario.setId(id); // Asegura que el ID sea el correcto
+            //Valida que el correo/cedula no sea de otro usuario
             usuarioService.actualizar(usuario);
             return "redirect:/usuarios"; 
         } catch (IllegalArgumentException e) {

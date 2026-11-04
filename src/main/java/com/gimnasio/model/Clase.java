@@ -9,19 +9,19 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "clases")
+@Table(name = "clases") //Define el nombre de la tabla en la BD
 public class Clase {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id //Llave primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //La BD egnera un ID auntomático
     private Long id;
 
-    @NotBlank(message = "El nombre o tipo de clase es requerido")
+    @NotBlank(message = "El nombre o tipo de clase es requerido")//Valida que el espacio no este vacio
     private String nombre;
 
     // Relación con el usuario que es entrenador (ADMIN)
-    @ManyToOne
-    @JoinColumn(name = "entrenador_id", nullable = false)
+    @ManyToOne //Muchas clases pueder ser dadas por un solo entrenador
+    @JoinColumn(name = "entrenador_id", nullable = false) //Crea la llave foranea 
     @NotNull(message = "Debe seleccionar un entrenador")
     private Usuario entrenador;
 
@@ -34,7 +34,7 @@ public class Clase {
     private LocalDateTime fechaFin;
 
     @NotNull(message = "El cupo máximo es requerido")
-    @Min(value = 1, message = "El cupo debe ser al menos 1")
+    @Min(value = 1, message = "El cupo debe ser al menos 1") //Min valida que el cupo no sea 0 ni negativo
     private Integer cupoMaximo;
 
     // Método que se ejecuta automáticamente antes de guardar en la BD
@@ -42,6 +42,7 @@ public class Clase {
     @PreUpdate
     public void calcularFechaFin() {
         if (this.fechaInicio != null) {
+            //Se toma la hora de inicio y se le suma 1h
             this.fechaFin = this.fechaInicio.plusHours(1);
         }
     }

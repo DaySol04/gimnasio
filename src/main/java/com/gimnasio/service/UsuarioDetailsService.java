@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+//Contiene la logica de negocio para la seguridad
 @Service 
 
 public class UsuarioDetailsService implements UserDetailsService {
@@ -35,11 +36,11 @@ public class UsuarioDetailsService implements UserDetailsService {
 
         return new User(
                 usuario.getUsername(),
-                usuario.getPassword(),
+                usuario.getPassword(), //Contraseña encriptada
                 usuario.isActivo(), // Si es false, no lo deja entrar
-                true, // accountNonExpired
-                true, // credentialsNonExpired
-                true, // accountNonLocked
+                true, // accountNonExpired, la cuenta no ha expirado
+                true, // credentialsNonExpired, las credenciales no han expirado
+                true, // accountNonLocked, la cuenta no esta bloqueada
                 Collections.singletonList(authority)
         );
     }

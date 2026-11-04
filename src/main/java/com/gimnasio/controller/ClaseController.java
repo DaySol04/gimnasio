@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping("/clases")
 public class ClaseController {
 
+    //Servicios, uno para las clases y otro para buscar a ls entrenadores
     private final ClaseService claseService;
     private final UsuarioService usuarioService;
 
@@ -25,12 +26,15 @@ public class ClaseController {
         this.usuarioService = usuarioService;
     }
 
+    //Muestra la lista de todas las calses programadas
     @GetMapping
     public String listar(Model model) {
+        //Se obtienen las clases ordenadas por fecha de inicio
         model.addAttribute("clases", claseService.listarTodas());
         return "clases/lista";
     }
 
+    //Muestra el formulario para crear una nueva clase
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         model.addAttribute("clase", new Clase());
@@ -42,8 +46,11 @@ public class ClaseController {
         return "clases/formulario";
     }
 
+    //Procesa el formulario cuando el usuario guarda la clase
     @PostMapping("/guardar")
     public String guardar(@Valid @ModelAttribute("clase") Clase clase, BindingResult errores, Model model, RedirectAttributes flash) {
+        
+        //Valida si hay errores
         if (errores.hasErrors()) {
             
             List<Usuario> entrenadores = usuarioService.listarTodos().stream()
@@ -53,6 +60,7 @@ public class ClaseController {
             return "clases/formulario";
         }
         try {
+            //Se calcula la hora de fin para ver si hay choque de horario
             claseService.guardar(clase);
             flash.addFlashAttribute("mensaje", "Clase registrada exitosamente");
             return "redirect:/clases";

@@ -20,6 +20,7 @@ public class ClaseService {
         this.usuarioRepository = usuarioRepository;
     }
 
+    //Para obtener las clases ordenadas por fecha
     public List<Clase> listarTodas() {
         return claseRepository.findAllByOrderByFechaInicioAsc();
     }

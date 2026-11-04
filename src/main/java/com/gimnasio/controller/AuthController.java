@@ -21,7 +21,7 @@ public class AuthController {
         this.usuarioService = usuarioService;
     }
 
-    
+    //---------------------Metodo Registro-------------------------
 
     // 1. Mostrar el formulario de registro
     @GetMapping("/registro")
@@ -39,7 +39,7 @@ public class AuthController {
         }
 
         try {
-            
+            //Se fuerza el rol a CLIENTE por seguridad, para que no puedan registrarse como admin
             usuario.setRol("CLIENTE");
             usuarioService.crear(usuario); 
             return "redirect:/login?exito";
@@ -49,8 +49,8 @@ public class AuthController {
             return "registro";
         }
     }
-
-        @GetMapping("/recuperar")
+    // --------------------Recuperar contraseña --------------   
+    @GetMapping("/recuperar")
     public String mostrarRecuperar() {
         return "recuperar";
     }
@@ -59,28 +59,32 @@ public class AuthController {
     public String procesarRecuperar(@RequestParam("email") String email, Model model) {
         System.out.println("--> Recibí el correo: " + email); 
         try {
+            //Se genera una contraseña temporal y la encripta en la BD
             String passTemp = usuarioService.recuperarPassword(email);
-            model.addAttribute("mensajeExito", "Contraseña restablecida. Tu nueva contraseña temporal es: " + passTemp);
+            model.addAttribute("mensajeExito", "Contraseña restablecida. Tu nueva contraseña temporal es: " + passTemp); //Muestra la contraseña temporal en pantalla
             System.out.println("--> Contraseña generada: " + passTemp);
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorRecuperar", e.getMessage());
         }
         return "recuperar";
     }
-    
-        @GetMapping("/perfil")
+    //------------------------Perfil----------------------------
+    //Muestra los datos del usuario que tiene la sesión activa
+    @GetMapping("/perfil")
     public String verPerfil(Authentication authentication, Model model) {
-        String username = authentication.getName();
+        String username = authentication.getName(); // Devuelve el username del usuario actual
         Usuario usuario = usuarioService.buscarPorUsername(username); 
         model.addAttribute("usuario", usuario);
         return "perfil";
     }
-
+    //Procesa la edición del perfil del usuario logueado 
     @PostMapping("/perfil")
     public String actualizarPerfil(@ModelAttribute("usuario") Usuario usuario, Authentication authentication, Model model) {
         try {
-            
+            //Se busca al usuario original en la BD usando el username de la sesión
             Usuario usuarioActual = usuarioService.buscarPorUsername(authentication.getName());
+            
+            //Se fuerza al ID para que el usuario solo pueda ditar su propio perfil
             usuario.setId(usuarioActual.getId()); 
             usuarioService.actualizar(usuario);
             return "redirect:/?perfilActualizado";

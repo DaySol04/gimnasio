@@ -27,13 +27,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    //Conecta el servicio de usuarios con el encriptador de contraseñas
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(usuarioDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
-
+    // Aqupi se definen las relas de accion, quien puede entrar a que ruta
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http

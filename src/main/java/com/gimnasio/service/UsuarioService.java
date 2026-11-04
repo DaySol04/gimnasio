@@ -21,7 +21,7 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    // Listar todos los usuarios (panel de admin)
+    // Listar todos los usuarios (usado pro el admin)
     public List<Usuario> listarTodos() {
         return usuarioRepository.findAll();
     }

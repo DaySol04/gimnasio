@@ -4,11 +4,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
-@Entity
-@Table(name="usuarios")
+@Entity //Indica que esta clase es una tabla en la BD
+@Table(name="usuarios") //Define el nomrbe de la tabla
 public class Usuario {
     
-    @Id
+    @Id //Llave primaria incremental 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -16,7 +16,7 @@ public class Usuario {
     private String nombre;
 
     @NotBlank(message = "El username es requerido")
-    @Column(unique = true)
+    @Column(unique = true) //Crea una restriccion para evitar duplicados
     private String username;
 
     @Email(message = "Debe ser un correo válido")
@@ -24,6 +24,7 @@ public class Usuario {
     @Column(unique = true)
     private String email;
 
+    //Cedula unica
     @NotBlank(message = "La cédula es requerida")
     @Column(unique = true)
     private String cedula;
